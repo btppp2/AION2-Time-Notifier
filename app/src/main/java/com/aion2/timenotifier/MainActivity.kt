@@ -26,7 +26,7 @@ class MainActivity:Activity(){
  private fun label(text:String,size:Float=16f,color:Int=light)=TextView(this).apply{this.text=text;textSize=size;setTextColor(color);setPadding(0,8,0,8)}
  private fun section(text:String){root.addView(label(text,19f,cyan))}
  private fun buildUi(){
-  val scroll=ScrollView(this).apply{setBackgroundColor(navy);fillViewport=true}
+  val scroll=ScrollView(this).apply{setBackgroundColor(navy);isFillViewport=true}
   root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(24,28,24,40)}
   scroll.addView(root);setContentView(scroll)
   root.addView(label("AION2 타임 알리미",27f,cyan))
