@@ -13,7 +13,8 @@ object AlarmEngine {
  fun group(ctx:Context)=prefs(ctx).getInt("group",1)
  fun enabled(ctx:Context,title:String)=prefs(ctx).getBoolean("enabled_$title",true)
  fun offsetEnabled(ctx:Context,offset:Int)=prefs(ctx).getBoolean("offset_$offset",offset==10||offset==0)
- fun visible(ctx:Context)=Schedule.events.filter{(it.group==0||it.group==group(ctx))&&enabled(ctx,it.title)}
+ fun masterEnabled(ctx:Context)=prefs(ctx).getBoolean("master_enabled",true)
+ fun visible(ctx:Context)=Schedule.events.filter{masterEnabled(ctx)&&(it.group==0||it.group==group(ctx))&&enabled(ctx,it.title)}
  fun createChannel(ctx:Context) {
   ctx.getSystemService(NotificationManager::class.java).createNotificationChannel(NotificationChannel(CHANNEL,"콘텐츠 시작 알림",NotificationManager.IMPORTANCE_HIGH))
  }
