@@ -31,6 +31,22 @@ class MainActivity:Activity(){
   scroll.addView(root);setContentView(scroll)
   root.addView(label("AION2 타임 알리미",27f,cyan))
   root.addView(label("한국시간(KST) · 매주 자동 반복",13f))
+  section("빠른 알림 설정")
+  val masterSwitch=Switch(this).apply {
+   text=if(AlarmEngine.masterEnabled(this@MainActivity))"전체 알림 켜짐 · 퇴근 모드" else "전체 알림 꺼짐 · 업무 모드"
+   textSize=19f
+   setTextColor(cyan)
+   isChecked=AlarmEngine.masterEnabled(this@MainActivity)
+   setPadding(8,20,8,20)
+   setOnCheckedChangeListener{button,checked->
+    AlarmEngine.prefs(this@MainActivity).edit().putBoolean("master_enabled",checked).apply()
+    button.text=if(checked)"전체 알림 켜짐 · 퇴근 모드" else "전체 알림 꺼짐 · 업무 모드"
+    AlarmEngine.reschedule(this@MainActivity)
+    updateCountdown()
+   }
+  }
+  root.addView(masterSwitch)
+  root.addView(label("OFF 시 모든 예약 알림 중지 · 기존 콘텐츠 설정은 유지",13f))
   section("다음 콘텐츠")
   countdown=label("계산 중...",21f);root.addView(countdown)
   section("내 그룹")
