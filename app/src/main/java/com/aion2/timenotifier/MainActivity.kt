@@ -31,22 +31,19 @@ class MainActivity:Activity(){
   scroll.addView(root);setContentView(scroll)
   root.addView(label("AION2 타임 알리미",27f,cyan))
   root.addView(label("한국시간(KST) · 매주 자동 반복",13f))
-  section("빠른 알림 설정")
-  val masterSwitch=Switch(this).apply {
-   text=if(AlarmEngine.masterEnabled(this@MainActivity))"전체 알림 켜짐 · 퇴근 모드" else "전체 알림 꺼짐 · 업무 모드"
-   textSize=19f
-   setTextColor(cyan)
-   isChecked=AlarmEngine.masterEnabled(this@MainActivity)
-   setPadding(8,20,8,20)
-   setOnCheckedChangeListener{button,checked->
-    AlarmEngine.prefs(this@MainActivity).edit().putBoolean("master_enabled",checked).apply()
-    button.text=if(checked)"전체 알림 켜짐 · 퇴근 모드" else "전체 알림 꺼짐 · 업무 모드"
-    AlarmEngine.reschedule(this@MainActivity)
-    updateCountdown()
+  section("그룹별 알림 · 원클릭")
+  root.addView(label("그룹별 알림을 각각 켜거나 끌 수 있어요.",13f))
+  for(g in 1..3)root.addView(Switch(this).apply{
+   text="${g}그룹 알림"
+   textSize=19f;setTextColor(cyan);setPadding(8,18,8,18)
+   isChecked=AlarmEngine.groupEnabled(this@MainActivity,g)
+   setOnCheckedChangeListener{_,checked->
+    AlarmEngine.prefs(this@MainActivity).edit().putBoolean("group_enabled_$g",checked).apply()
+    AlarmEngine.reschedule(this@MainActivity);updateCountdown()
    }
-  }
-  root.addView(masterSwitch)
-  root.addView(label("OFF 시 모든 예약 알림 중지 · 기존 콘텐츠 설정은 유지",13f))
+  })
+  root.addView(label("공통 콘텐츠는 하나 이상의 그룹이 켜져 있으면 알림이 와요.",13f))
+  root.addView(label("TTS는 휴대폰 소리 모드에서만 재생됩니다.",13f))
   section("다음 콘텐츠")
   countdown=label("계산 중...",21f);root.addView(countdown)
   section("내 그룹")
@@ -84,7 +81,7 @@ class MainActivity:Activity(){
    }
   })
   root.addView(Button(this).apply{
-   text="알림 테스트"
+   text="알림 + TTS 테스트"
    setOnClickListener{AlarmEngine.notifyEvent(this@MainActivity,Schedule.events.first(),5)}
   })
   section("선택 그룹 주간 시간표")
